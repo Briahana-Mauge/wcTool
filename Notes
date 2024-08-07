@@ -1,0 +1,23 @@
+8/7/2024
+CCWC word count tool
+
+SUMMARY
+Building a command line tool that works like the word count tool 'man wc'
+
+The wc tool can:
+count words: -w flag
+count lines: -l flag
+count characters: -m flag
+count bytes: -c flag
+have default count option that suppords words, characters, and bytes without putting a flag
+
+What we need to know how to do?
+1) Read a file with our program
+2) Distingush file types (.txt, .pdf, etc)
+3) How to tell what a "line", "word" or "character" is
+4) How to create a terminal command
+    a) How to add optional flag to a terminal command
+5) What is a byte
+6) How to count a byte
+7) Separate a file into words
+
