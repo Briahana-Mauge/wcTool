@@ -21,3 +21,12 @@ What we need to know how to do?
 6) How to count a byte
 7) Separate a file into words
 
+TODO:
+1) Create a basic terminal command that prints something to the console/terminal
+2) Write a command that takes user input
+3) Write a test for the command
+
+
+WHERE TO FIND THINGS:
+1) ~/custom_bash_commands.sh to change the custom ccwc commands
+2) write "source .custom_bash_commands.sh" in the terminal to reload the file after changing it
