@@ -7,3 +7,11 @@ function countLines(input) {
 }
 
 console.log(countLines(fileText))
+
+function countWords(input){
+    const noSpaceExp = /\s+/g
+    const splitByWords = input.trim().replace(noSpaceExp, " ").split(' ').length;
+    return splitByWords
+}
+
+console.log(countWords(fileText))
