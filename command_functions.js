@@ -15,3 +15,10 @@ function countWords(input){
 }
 
 console.log(countWords(fileText))
+
+function countCharacters(input){
+    const splitByCharacters = input.split('').length;
+    return splitByCharacters
+}
+
+console.log(countCharacters(fileText))
