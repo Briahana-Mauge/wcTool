@@ -1,14 +1,30 @@
 const fs = require('fs');
 const { argv } = require("node:process");
+const resolve = require("path").resolve;
+process.stdin.setEncoding("utf8");
+
+const globalData = [];
+
+process.stdin.on("data", function (data) {
+    globalData.push(data);
+});
+process.stdin.on("end", function (data) {
+    main(globalData.join(""));
+    process.exit();
+});
 
 // print process.argv
-function parseTerminalArguments(args) {
+function parseTerminalArgumentsWithoutCat(args) {
     const argRecord = {};
     //check that there is at least one parameter provided and it is a path
     if (args.length === 0 || !args.at(-1).includes(".")) {
         throw new Error("Please supply a valid path");
     }
+
     argRecord.path = args.pop();
+    if (argRecord.path[0] === ".") {
+        argRecord.path = resolve(argRecord.path);
+    }
     //only take first option
     if (args.length > 0) {
         argRecord.option = args[0];
@@ -17,29 +33,45 @@ function parseTerminalArguments(args) {
 }
 
 //read a file based on option flags
-function main() {
-    const { path, option } = parseTerminalArguments(argv.slice(2));
-    const fileText = fs.readFileSync(`${path}`, 'utf8');
-
-    switch (option) {
+function main(globalData) {
+    let fileText;
+    let commandOption;
+    let filePath = "";
+    if (globalData && globalData.length > 0) {
+        fileText = globalData;
+        commandOption = argv[argv.length - 1] || "";
+    } else {
+        const { path, option } = parseTerminalArgumentsWithoutCat(argv.slice(2));
+        fileText = fs.readFileSync(`${path}`, 'utf8');
+        commandOption = option;
+    }
+    switch (commandOption) {
         case '-l':
-            return console.log(countLines(fileText), path);
+            console.log(countLines(fileText), filePath);
             break;
         case '-w':
-            return console.log(countWords(fileText), path);
+            console.log(countWords(fileText), filePath);
             break;
         case '-m':
-            return console.log(countCharacters(fileText), path);
+            console.log(countCharacters(fileText), filePath);
             break;
         case '-c':
-            return console.log(countBytes(fileText), path);
-            break
+            console.log(countBytes(fileText), filePath);
+            break;
         default:
-            return console.log(countLines(fileText), countWords(fileText), countBytes(fileText), path);
+            console.log(countLines(fileText), countWords(fileText), countBytes(fileText), filePath);
             break;
     }
+
+    process.exit();
 }
-main();
+//process.stdin.isTTY if the process is connected to the raw terminal instead of being
+//piped from another command
+//TTY is true if nothing is being piped or redirected. it is true if the terminal
+//is running interactively
+//if this is true that means there is no cat, so we run main without external data
+//and read the file the user passes in with node
+if (process.stdin.isTTY) main();
 
 
 
